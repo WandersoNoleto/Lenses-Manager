@@ -31,33 +31,27 @@ class RecipeManager(models.Manager):
                 F('author__last_name'), Value(' ('),
                 F('author__username'), Value(')'),
             )
-        ).order_by('-id')
+        ).order_by('-id').select_related('category', 'author').prefetch_related()
 
 
 class Recipe(models.Model):
-    objects = RecipeManager()
-    title = models.CharField(max_length=65, verbose_name=_('Title'))
-    description = models.CharField(max_length=165)
-    slug = models.SlugField(unique=True)
-    preparation_time = models.IntegerField()
+    objects         = RecipeManager()
+    title           = models.CharField(max_length=65, verbose_name=_('Title'))
+    description     = models.CharField(max_length=165)
+    slug            = models.SlugField(unique=True)
+    preparation_time      = models.IntegerField()
     preparation_time_unit = models.CharField(max_length=65)
-    servings = models.IntegerField()
-    servings_unit = models.CharField(max_length=65)
+    servings          = models.IntegerField()
+    servings_unit     = models.CharField(max_length=65)
     preparation_steps = models.TextField()
     preparation_steps_is_html = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_published = models.BooleanField(default=False)
-    cover = models.ImageField(
-        upload_to='recipes/covers/%Y/%m/%d/', blank=True, default='')
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True,
-        default=None,
-    )
-    author = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True
-    )
-    tags = models.ManyToManyField(Tag, blank=True, default='')
+    created_at        = models.DateTimeField(auto_now_add=True)
+    updated_at        = models.DateTimeField(auto_now=True)
+    is_published      = models.BooleanField(default=False)
+    cover             = models.ImageField(upload_to='recipes/covers/%Y/%m/%d/', blank=True, default='')
+    category          = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, default=None, )
+    author            = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    tags              = models.ManyToManyField(Tag, blank=True, default='')
 
     def __str__(self):
         return self.title
@@ -68,7 +62,7 @@ class Recipe(models.Model):
     @staticmethod
     def resize_image(image, new_width=800):
         image_full_path = os.path.join(settings.MEDIA_ROOT, image.name)
-        image_pillow = Image.open(image_full_path)
+        image_pillow    = Image.open(image_full_path)
         original_width, original_height = image_pillow.size
 
         if original_width <= new_width:

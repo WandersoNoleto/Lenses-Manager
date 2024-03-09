@@ -8,12 +8,17 @@ class RecipeSerializer(serializers.Serializer):
     title       = serializers.CharField(max_length=255) 
     description = serializers.CharField(max_length=255) 
     preparation = serializers.SerializerMethodField()
+    preparation_steps = serializers.CharField(max_length=255)
+    serving     = serializers.SerializerMethodField()
     category    = serializers.StringRelatedField()
     author      = serializers.StringRelatedField()
     tags_name   = serializers.SerializerMethodField()
     
     def get_preparation(self, recipe):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
+    
+    def get_serving(self, recipe):
+        return f'{recipe.servings} {recipe.servings_unit}'
     
     def validate(self, attrs):
         super_validate = super().validate(attrs)

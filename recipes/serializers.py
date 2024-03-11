@@ -1,14 +1,20 @@
 from rest_framework import serializers
-from collections import defaultdict
+from authors.validators import AuthorRecipeValidator
+from recipes.models import Recipe
 
 from attr import attr
 
-class RecipeSerializer(serializers.Serializer):
-    id          = serializers.IntegerField()
-    title       = serializers.CharField(max_length=255) 
-    description = serializers.CharField(max_length=255) 
+class RecipeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Recipe
+        fields = [
+            'id', 'title', 'description', 'author',
+            'category', 'tags', 'preparation',
+            'preparation_steps', 'serving', 'tags_name'
+        ]
+    
+    
     preparation = serializers.SerializerMethodField()
-    preparation_steps = serializers.CharField(max_length=255)
     serving     = serializers.SerializerMethodField()
     category    = serializers.StringRelatedField()
     author      = serializers.StringRelatedField()
@@ -23,24 +29,11 @@ class RecipeSerializer(serializers.Serializer):
     def validate(self, attrs):
         super_validate = super().validate(attrs)
 
-        title = attrs.get('title')
-        description = attrs.get('description')
-
-        if title == description:
-            raise serializers.ValidationError(
-                {
-                    "title": ["Posso", "ter", "mais de um erro"],
-                    "description": ["Posso", "ter", "mais de um erro"],
-                }
-            )
+        validator = AuthorRecipeValidator(data=self.initial_data, ErrorClass=serializers.ValidationError)
+        validator.clean()
 
         return super_validate
 
-    def validate_title(self, value):
-        title = value
-
-        if len(title) < 5:
-            raise serializers.ValidationError('Must have at least 5 chars.')
 
         return title
     def get_tags_name(self, recipe):

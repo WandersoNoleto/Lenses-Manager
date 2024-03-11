@@ -1,6 +1,7 @@
 import os
 from collections import defaultdict
-
+from random import SystemRandom
+import string
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -80,16 +81,15 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            slug = f'{slugify(self.title)}'
-            self.slug = slug
+            rand_letters = ''.join(
+                SystemRandom().choices(
+                    string.ascii_letters + string.digits,
+                    k=5,
+                )
+            )
+            self.slug = slugify(f'{self.title}-{rand_letters}')
 
         saved = super().save(*args, **kwargs)
-
-        if self.cover:
-            try:
-                self.resize_image(self.cover, 840)
-            except FileNotFoundError:
-                ...
 
         return saved
 

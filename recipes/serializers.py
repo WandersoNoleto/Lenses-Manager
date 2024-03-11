@@ -1,40 +1,54 @@
-from rest_framework import serializers
 from authors.validators import AuthorRecipeValidator
-from recipes.models import Recipe
+from rest_framework import serializers
+from tags.models import Tag
 
-from attr import attr
+from .models import Recipe
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'slug']
+
 
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = Recipe
+        model = Recipe
         fields = [
             'id', 'title', 'description', 'author',
             'category', 'tags', 'preparation',
-            'preparation_steps', 'serving', 'tags_name'
+            'tag_objects', 'preparation_time', 'preparation_time_unit', 
+            'servings', 'servings_unit',
+            'preparation_steps', 'cover'
         ]
-    
-    
-    preparation = serializers.SerializerMethodField()
-    serving     = serializers.SerializerMethodField()
-    category    = serializers.StringRelatedField()
-    author      = serializers.StringRelatedField()
-    tags_name   = serializers.SerializerMethodField()
-    
+
+    preparation = serializers.SerializerMethodField(read_only=True)
+    category    = serializers.StringRelatedField(read_only=True)
+    tag_objects = TagSerializer(many=True, source='tags',read_only=True)
+
+
     def get_preparation(self, recipe):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
     
-    def get_serving(self, recipe):
-        return f'{recipe.servings} {recipe.servings_unit}'
-    
     def validate(self, attrs):
+        if self.instance is not None and attrs.get('servings') is None:
+            attrs['servings'] = self.instance.servings
+
+        if self.instance is not None and attrs.get('preparation_time') is None:
+            attrs['preparation_time'] = self.instance.preparation_time
+
         super_validate = super().validate(attrs)
-
-        validator = AuthorRecipeValidator(data=self.initial_data, ErrorClass=serializers.ValidationError)
-        validator.clean()
-
+        AuthorRecipeValidator(
+            data=attrs,
+            ErrorClass=serializers.ValidationError,
+        )
         return super_validate
 
+    def save(self, **kwargs):
+        return super().save(**kwargs)
 
-        return title
-    def get_tags_name(self, recipe):
-        return [tag.name for tag in recipe.tags.all()]
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)

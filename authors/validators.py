@@ -9,6 +9,7 @@ class AuthorRecipeValidator:
         self.errors = defaultdict(list) if errors is None else errors
         self.ErrorClass = ValidationError if ErrorClass is None else ErrorClass
         self.data = data
+        self.clean()
 
     def clean(self, *args, **kwargs):
         self.clean_title()
@@ -36,7 +37,7 @@ class AuthorRecipeValidator:
 
 
     def clean_preparation_time(self):
-        field_name = 'preparation_time'
+        field_name  = 'preparation_time'
         field_value = self.data.get(field_name)
 
         if not is_positive_number(field_value):
@@ -45,8 +46,9 @@ class AuthorRecipeValidator:
         return field_value
 
     def clean_servings(self):
-        field_name = 'servings'
+        field_name  = 'servings'
         field_value = self.data.get(field_name)
+        print(field_value)
 
         if not is_positive_number(field_value):
             self.errors[field_name].append('Must be a positive number')

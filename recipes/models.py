@@ -13,14 +13,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
 from tags.models import Tag
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=65)
-
-    def __str__(self):
-        return self.name
-
+from categories.models import Category
 
 class RecipeManager(models.Manager):
     def get_published(self):

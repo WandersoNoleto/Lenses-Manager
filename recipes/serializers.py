@@ -1,14 +1,8 @@
 from authors.validators import AuthorRecipeValidator
 from rest_framework import serializers
-from tags.models import Tag
 
-from .models import Recipe
-
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ['id', 'name', 'slug']
+from tags.serializers import TagSerializer
+from recipes.models import Recipe
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -16,12 +10,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = [
             'id', 'title', 'description', 'author',
-            'category', 'tags', 'preparation',
+            'public', 'category', 'tags', 'preparation',
             'tag_objects', 'preparation_time', 'preparation_time_unit', 
             'servings', 'servings_unit',
             'preparation_steps', 'cover'
         ]
 
+    public = serializers.BooleanField(source='is_published',read_only=True)
     preparation = serializers.SerializerMethodField(read_only=True)
     category    = serializers.StringRelatedField(read_only=True)
     tag_objects = TagSerializer(many=True, source='tags',read_only=True)

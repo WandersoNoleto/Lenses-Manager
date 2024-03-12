@@ -32,6 +32,7 @@ INSTALLED_APPS += [
     'recipes',
     'authors',
     'tags',
+    'categories'
 ]
 
 MIDDLEWARE = [

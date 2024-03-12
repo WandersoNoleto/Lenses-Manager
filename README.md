@@ -28,12 +28,12 @@ After being serialized, this is how the data travels via JSON.
 	"public": false,
 	"category": null,
 	"tags": [],
-	"preparation": "25 minutos",
+	"preparation": "25 minutes",
 	"tag_objects": [],
 	"preparation_time": 25,
-	"preparation_time_unit": "minutos",
+	"preparation_time_unit": "minutes",
 	"servings": 2,
-	"servings_unit": "persons",
+	"servings_unit": "people",
 	"preparation_steps": "Have butcher tenderize steak Cut in strips and brown in olive oil Add onions & sauté ; Add tomato juice and simmer until tender Add sliced mushrooms and yogurt and simmer for five more minutes Add spices to taste Serve with vegetables or salad",
 	"cover": null
 }

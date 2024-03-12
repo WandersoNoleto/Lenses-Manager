@@ -4,9 +4,12 @@ Django==5.0.3
 django-debug-toolbar==4.3.0
 django-filter==24.1
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
 intervaltree==3.1.0
 networkx==3.2.1
 pillow==10.2.0
+PyJWT==2.8.0
+python-dotenv==1.0.1
 pytz==2024.1
 sortedcontainers==2.4.0
 sqlparse==0.4.4

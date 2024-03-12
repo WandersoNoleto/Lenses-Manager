@@ -1,9 +1,15 @@
 
-from django.urls import path
+from django.urls import path, include
 from recipes import views
+from rest_framework.routers import SimpleRouter
 
+app_name = 'recipes'
+recipe_router = SimpleRouter()
+recipe_router.register(
+    'recipes',
+    views.RecipeAPIViewSet,
+)
 
 urlpatterns = [
-    path('', views.RecipeList.as_view(), name='recipes_list'),
-    path('<int:pk>/', views.RecipeDetail.as_view(), name='recipe_detail')
+    path('', include(recipe_router.urls))
 ]

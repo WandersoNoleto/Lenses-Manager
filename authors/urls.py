@@ -1,7 +1,7 @@
-from django.urls import path
-from authors import views
+from rest_framework.routers import SimpleRouter
+from . import views
 
+author_router = SimpleRouter()
+author_router.register(prefix='api', viewset=views.AuthorViewSet, basename='author-api')
 
-urlpatterns = [
-    path('', views.author_list, name='authors_list'),
-]
+urlpatterns = author_router.urls

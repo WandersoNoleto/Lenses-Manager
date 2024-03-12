@@ -13,6 +13,7 @@ class RecipeAPIViewSet(ModelViewSet):
     filter_backends  = [DjangoFilterBackend]
     filterset_fields = ['category', 'tags']
     permission_classes = [IsAuthenticatedOrReadOnly]
+    http_method_names  = ['get', 'options', 'head', 'patch', 'post', 'delete']
         
     def get_permissions(self):
         if self.request.method in ['PATCH', 'ṔOST']:

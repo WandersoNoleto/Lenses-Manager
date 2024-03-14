@@ -14,11 +14,11 @@ The Recipe API provides endpoints for managing recipes, enabling communication b
 * Filtering recipes based on their characteristics with Django Rest Filtering
 * Publish a recipe (update is_published status)
 
-### Model
+## Model
 
 Below we have the Django ORM related to the recipe model:
 ![RecipeModel](https://github.com/WandersoNoleto/Recipes-API/blob/main/doc_files/RecipeModel.png)
-After being serialized, this is how the data travels via JSON.
+After being serialized, this is how the data travels via JSON:
 ```
 {
 	"id": 7,
